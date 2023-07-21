@@ -8,7 +8,6 @@
              class="block px-4 w-full border-gray-300 rounded-full focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
       :placeholder="props.placeholder"
       />
-
     </div>
   </div>
 </template>
