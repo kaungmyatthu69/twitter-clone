@@ -13,33 +13,43 @@ export default defineEventHandler(async (event)=>{
             resolve({fields,files})
         })
     })
+
     const {fields,files} = response
     const userId = event.context?.auth?.user?.id
     const tweetData ={
         text: fields.text[0],
         authorId : userId
-
     }
-    // const replyTo = fields.replyTo
-    // if(replyTo && replyTo !== 'null'){
-    //     tweetData.replyToId = replyTo
+
+    // const replyTo = fields.replyTo[0]
+    //
+    // if(fields.replyTo[0]){
+    //     tweetData.replyToId = fields.replyTo[0]
+    //
     // }
-   const tweet = await  createTweet(tweetData)
 
-    const filePromises = Object.keys(files).map(async (key) => {
-     const file = files[key][0]
-       const cloudinaryResource =   await  uploadToCloudinary(file.filepath)
-        return createMediaFile({
-            url: cloudinaryResource.secure_url,
-            providerPublicId: cloudinaryResource.public_id,
-            userId: userId,
-            tweetId: tweet.id
-        })
+    // const tweet = await  createTweet(tweetData)
 
-    });
-    await  Promise.all(filePromises)
+    if(files){
+        const filePromises = Object.keys(files).map(async (key) => {
+            const file = files[key]
+            const cloudinaryResource =   await  uploadToCloudinary(file.filepath)
+            return createMediaFile({
+                url: cloudinaryResource.secure_url,
+                providerPublicId: cloudinaryResource.public_id,
+                userId: userId,
+                tweetId: tweet.id
+            })
+
+        });
+        await  Promise.all(filePromises)
+    }
+    //
+    // console.log(files)
     return {
-        tweet:  tweetTransformer(tweet)
-
+        // tweet:  tweetTransformer(tweet)
+        // response
+        // tweetData
+        files
     }
 })

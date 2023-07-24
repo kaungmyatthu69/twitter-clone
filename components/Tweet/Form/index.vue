@@ -3,7 +3,7 @@
     <UISpinner/>
   </div>
 <div v-else>
-  <TweetFormInput  :user="props.user" @onSubmit="handleFormSubmit " />
+  <TweetFormInput  :placeholder="props.placeholder" :user="props.user" @onSubmit="handleFormSubmit " />
 </div>
 </template>
 <script setup>
@@ -13,6 +13,10 @@ const props = defineProps({
   user:{
     type:Object,
     required:true
+  },
+  placeholder :{
+    type:String,
+    default:"What's happening ?"
   }
 })
 const { postTweet } = useTweets()
@@ -21,7 +25,7 @@ const handleFormSubmit =async (data)=>{
   try {
     const response = await  postTweet({
       text:data.text,
-      mediaFiles : data.mediaFiles
+      MediaFiles : data.MediaFiles
     })
     alert(JSON.stringify(response))
   }catch (error){

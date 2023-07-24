@@ -5,15 +5,19 @@ export default  defineEventHandler(async (event)=>{
     const endpoints=[
         '/api/auth/user',
         '/api/user/tweets',
-        '/api/tweets'
+        '/api/tweets',
+        '/api/tweets/:id'
     ]
+
     const isHandleByThisMiddleware = endpoints.some(endpoint=>{
         const pattern = new UrlPattern(endpoint)
         return pattern.match(event.req.url)
     })
+
     if(!isHandleByThisMiddleware){
         return
     }
+
     const token = event.req.headers['authorization']?.split(' ')[1]
     const decoded = decodeAccessToken(token)
     if(!decoded){
@@ -28,6 +32,6 @@ export default  defineEventHandler(async (event)=>{
         event.context.auth = {user}
 
     }catch (error){
-    return
+    return error
     }
 })
